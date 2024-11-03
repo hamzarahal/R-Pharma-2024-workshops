@@ -1,0 +1,48 @@
+---
+title: "Gapminder Report: 1952"
+execute: 
+  echo: false
+params:
+  choose_year: 1952
+---
+
+```{r}
+#| label: load-pkgs
+#| message: false
+library(gapminder)
+library(dplyr)
+library(ggplot2)
+library(glue)
+```
+
+This is a report using the [Gapminder](https://www.gapminder.org/data/) data. @fig-life-exp shows a plot of the median life expectancy in the year 1952 for each continent.
+
+```{r}
+#| label: fig-life-exp
+#| fig-cap: "Life expectancy in 1952"
+barchart_year <- function(
+    choose_year, fill = "blue", data = gapminder) {
+  # Median life expectancy per continent
+  gapminder_year <- gapminder |>
+    filter(year == choose_year) |>
+    group_by(continent) |>
+    summarise(
+      median_lifeExp = median(lifeExp)
+    )
+  # Bar chart
+  g <- ggplot(data = gapminder_year) +
+    geom_col(
+      mapping = aes(
+        x = median_lifeExp,
+        y = reorder(continent, median_lifeExp)
+      ),
+      fill = fill
+    ) +
+    labs(
+      x = "Median Life Expectancy (years)", y = NULL,
+      title = glue("Life Expectancy in {choose_year}")
+    )
+  return(g)
+}
+barchart_year(params$choose_year)
+```
