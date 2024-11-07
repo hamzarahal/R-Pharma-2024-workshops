@@ -21,3 +21,12 @@ kruskal_ard <-
     by = TRT01A, 
     variables = AGE 
   ) 
+
+ard_stack_hierarchical(
+  data = adae,
+  variables = c(AESOC, AEDECOD),
+  by = c(TRT01A, AESEV), 
+  id = USUBJID,
+  denominator = adsl,
+  over_variables = TRUE
+)
